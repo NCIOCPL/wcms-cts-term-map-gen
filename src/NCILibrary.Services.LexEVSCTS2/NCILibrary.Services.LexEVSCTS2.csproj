@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{43768FA7-A0DA-4F41-987D-9BCE9138F193}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{7274E481-B75A-4FE2-9BA7-C4410CF60D3D}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CTSTermMapGenerator</RootNamespace>
-    <AssemblyName>CTSTermMapGenerator</AssemblyName>
+    <RootNamespace>NCI.Services.LexEVSCTS2</RootNamespace>
+    <AssemblyName>NCILibrary.Services.LexEVSCTS2</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -59,19 +56,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TermMapGenerator.cs" />
+    <Compile Include="BaseLexEVSCTS2Client.cs" />
+    <Compile Include="LexEVSCTS2APIClient.cs" />
+    <Compile Include="NCIThesaurusTermLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ThesaurusTerm.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NCILibrary.Services.LexEVSCTS2\NCILibrary.Services.LexEVSCTS2.csproj">
-      <Project>{7274e481-b75a-4fe2-9ba7-c4410cf60d3d}</Project>
-      <Name>NCILibrary.Services.LexEVSCTS2</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

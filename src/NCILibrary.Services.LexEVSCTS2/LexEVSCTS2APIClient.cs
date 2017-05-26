@@ -28,6 +28,7 @@ namespace NCI.Services.LexEVSCTS2
         {
             this.Host = host;
             this.client = new HttpClient();
+            this.client.Timeout = TimeSpan.FromHours(1);
             this.client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
@@ -45,7 +46,23 @@ namespace NCI.Services.LexEVSCTS2
             JToken response = await this.GetEVSResponse(url);
 
             return response;
-        }        
+        }
+
+        /// <summary>
+        /// Gets the child associations for an entity
+        /// </summary>
+        /// <param name="codeSystem"></param>
+        /// <param name="codeSystemVersion"></param>
+        /// <param name="entityID"></param>
+        /// <returns></returns>
+        public override async Task<JToken> GetChildrenAssociations(string codeSystem, string codeSystemVersion, string entityID)
+        {
+            string url = String.Format("/lexevscts2/codesystem/{0}/version/{1}/entity/{2}/children?maxtoreturn=1000&format=json", codeSystem, codeSystemVersion, entityID);
+
+            JToken response = await this.GetEVSResponse(url);
+
+            return response;
+        }
 
         /// <summary>
         /// Internal method that gets response from EVS service.  All responses are pretty much the same?

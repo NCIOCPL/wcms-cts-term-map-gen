@@ -20,7 +20,7 @@ namespace CTSTermMapGenerator
             log.Info("Map Generator Starting");
 
             Task mapGen = GenerateTermsMap(new string[] { "C7057" });
-
+            
             mapGen.Wait();
 
             log.Info("Map Generator Finished");
@@ -37,9 +37,20 @@ namespace CTSTermMapGenerator
         {
             ThesaurusTerm term = await termLoader.GetTerm(entityID);
 
+            await FetchAndWrite(term);
+        }
+
+        static async Task FetchAndWrite(ThesaurusTerm term)
+        {            
             log.Info(term.ToString());
 
+            ThesaurusTerm[] childTerms = await termLoader.GetChildTerms(term.EntityID);
 
+            if (childTerms.Length > 0)
+            {
+                await Task.WhenAll(childTerms.Select(ct => FetchAndWrite(ct)));
+            }
         }
+
     }
 }

@@ -48,10 +48,54 @@ namespace NCI.Services.LexEVSCTS2
             else
             {
                 rtnTerm = await this.InternalGetTerm(entityID);
+
                 this._termCache.Add(entityID, rtnTerm);
             }
             
             return rtnTerm;
+        }
+
+        public async Task<ThesaurusTerm[]> GetChildTerms(string entityID)
+        {
+            string[] childIDs = await InternalGetChildIDs(entityID);
+
+            ThesaurusTerm[] terms = await Task.WhenAll(childIDs.Select( childID => GetTerm(childID)));
+
+            return terms;
+        }
+
+        private async Task<string[]> InternalGetChildIDs(string entityID)
+        {
+            try
+            {
+                dynamic entityDir = await this._client.GetChildrenAssociations(CODE_SYSTEM, this._codeSystemVersion, entityID);
+                var dir = entityDir.EntityDirectory;
+
+                if (dir.complete != "COMPLETE")
+                {
+                    throw new Exception(string.Format("Incomplete child list for term {0}", entityID));
+                }
+
+                string[] childIDs = { };
+
+                if (dir.numEntries > 0)
+                {
+                    //Note: while dir.entry is not plural in the response object, it is an array.
+                    childIDs = (
+                        from entry in ((IEnumerable<dynamic>)dir.entry)
+                        where ((string)entry.name.name).StartsWith("C") //Make sure it is a C-Code
+                        select (string)entry.name.name
+                    ).ToArray();
+                }
+
+                return childIDs;
+            }
+            catch (Exception ex) {
+                log.Error(String.Format("Error Fetching Children for {0}", entityID));
+                log.Info(ex.ToString()); 
+            }
+
+            return new string[] {};
         }
 
         /// <summary>
@@ -81,7 +125,16 @@ namespace NCI.Services.LexEVSCTS2
                 };
 
             }
-            catch (Exception ex) { log.Info(ex.ToString()); }
+            catch (TaskCanceledException canEx)
+            {
+                log.Error(String.Format("Error Fetching term for {0}", entityID));
+                log.Info(canEx.ToString());
+                throw canEx;
+            }
+            catch (Exception ex) {
+                log.Error(String.Format("Error Fetching term for {0}", entityID));
+                log.Info(ex.ToString()); 
+            }
 
             return rtnTerm;
         }

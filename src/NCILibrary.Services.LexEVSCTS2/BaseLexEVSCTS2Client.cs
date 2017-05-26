@@ -26,6 +26,6 @@ namespace NCI.Services.LexEVSCTS2
         /// <param name="entityID"></param>
         public abstract Task<JToken> ReadEntityAsync(string codeSystem, string codeSystemVersion, string entityID);
 
-
+        public abstract Task<JToken> GetChildrenAssociations(string codeSystem, string codeSystemVersion, string entityID);
     }
 }

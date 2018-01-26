@@ -1,0 +1,25 @@
+{
+  "name": "wcms-cts-term-map-gen",
+  "version": "1.0.0",
+  "description": "Tool used to generate EVS Mapping file for use by the dynamic trial listing pages",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NCIOCPL/wcms-cts-term-map-gen.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NCIOCPL/wcms-cts-term-map-gen/issues"
+  },
+  "homepage": "https://github.com/NCIOCPL/wcms-cts-term-map-gen#readme",
+  "dependencies": {
+    "axios": "^0.17.1",
+    "config": "^1.29.2",
+    "lodash": "^4.17.4",
+    "winston": "^2.4.0"
+  }
+}

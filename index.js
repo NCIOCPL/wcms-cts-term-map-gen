@@ -67,10 +67,14 @@ async function fetchTermAndChildren(termID) {
  * @param {*} displayName 
  */
 function getFriendlyUrlForDisplayName(displayName) {
-    let url = diacritics.remove(displayName);
-    url = url.toLowerCase();
-    url = url.replace(/[,+()./'[:*\]]+/g, "");
-    url = url.replace(/\s+/g, "-");
+    let url = displayName;
+        url = url.replace('Ã¶', 'ö') //Hacks for API encoding issues
+                .replace('Ã³', 'ó') 
+        url = diacritics.remove(url)
+            .toLowerCase()
+            .replace(/[",+()./'[:*\]]+/g, "")
+            .replace(/(\s+|[;])/g, "-")
+            .replace(/[%]+/g,'pct');
     //Replace non-latin characters (e.g. greek) with latin equivelents. n
  
     return url;
@@ -107,15 +111,18 @@ function rollupConceptsToMappings(allTerms) {
             displayName = ctrpDN[0].name;
         }
     
-        if (!allMappings[displayName]) {
-            allMappings[displayName] = {
+        //Using lowercase display name because of a few data issues
+        //however, IIIB vs IIIb should not matter.
+        if (!allMappings[displayName.toLowerCase()]) {
+            allMappings[displayName.toLowerCase()] = {
                 displayName: displayName,
                 codes: [],
+                isMenuItem: ( cncpt.isDisease && (cncpt.isMainType || cncpt.isSubtype)) || cncpt.isDiseaseStage,
                 friendlyUrl: getFriendlyUrlForDisplayName(displayName)
             };
         }
             
-        allMappings[displayName].codes.push(cncpt.code);
+        allMappings[displayName.toLowerCase()].codes.push(cncpt.code);
     } 
     
     return allMappings;
@@ -124,18 +131,18 @@ function rollupConceptsToMappings(allTerms) {
 function validateMappings(allMappings) {
 
     let hasErrors = false;
-    let urls = [];
+    let urls = {};
 
     //We know all display names are unique because we are a dictionary
     //lets make sure that:
     //  1) All URLs would be unique
     //  2) All URLs match a-z0-9\-
-    _.forEach(allMappings, (mapping) => {
-        if (urls.includes(mapping.friendlyUrl)) {
+    _.forEach(allMappings, (mapping) => {        
+        if (Object.keys(urls).includes(mapping.friendlyUrl)) {
             hasErrors = true;
-            logger.error(`Validation Error: Duplicate URL ${mapping.friendlyUrl}`)
+            logger.error(`Validation Error: Duplicate URL ${mapping.friendlyUrl}: Codes: ${urls[mapping.friendlyUrl].codes} -- ${mapping.codes} `)
         } else {
-            urls.push(mapping.friendlyUrl);
+            urls[mapping.friendlyUrl] = mapping;
         }
 
         if (!validUrlRegex.test(mapping.friendlyUrl)) {
@@ -173,42 +180,41 @@ function outputMappingFile(allMappings, filePath, formatter) {
     });
 }
 
-/**
- * Outputs both the name mappings and URL mappings
- */
-async function outputMappings(allMappings) {
-
-    await outputMappingFile(allMappings, './name-mappings.txt', (mapEntry) => {
-        let codes = mapEntry.codes.join(',');
-        return `${codes}|${mapEntry.displayName}`
-    });
-
-    await outputMappingFile(allMappings, './url-mappings.txt', (mapEntry) => {
-        let codes = mapEntry.codes.join(',');
-        return `${codes}|${mapEntry.friendlyUrl}`
-    });
-
-    return;
-}
-
-async function main() {
+async function diseaseMappings() {
 
     logger.info("Beginning Run")
 
     logger.info("Fetching Terms")
     //Fetch all EVS diseases
     let allDiseases = await fetchTermAndChildren(rootConceptID);
-    logger.info(`Fetched ${allDiseases.length} terms`);
+    logger.info(`Fetched ${allDiseases.length} terms`);    
+
+    //Remove these bad terms
+    let badDiseases = [ 'C138195', 'C131913' ];
+    _.remove(allDiseases, (disease) => { return badDiseases.includes(disease.code); });
 
     logger.info("Rolling Up Mappings")
     //Roll up the codes to a single mapping
     let allMappings = rollupConceptsToMappings(allDiseases); 
     logger.info(`Rolled up ${Object.keys(allMappings).length} mappings`);
-        
-    if (validateMappings(allMappings)) {
-        logger.info("All mappings are valid - outputting")
-        //Output the mappings
-        await outputMappings(allMappings);
+     
+    let mappingsForUrls = _.pickBy(allMappings, (mapping) => {
+        return mapping.isMenuItem;
+    });
+
+    if (validateMappings(mappingsForUrls)) {
+        logger.info(`All mappings are valid - outputting. Names: ${Object.keys(allMappings).length} URLS: ${Object.keys(mappingsForUrls).length}`)
+
+        await outputMappingFile(allMappings, './disease-name-mappings.txt', (mapEntry) => {
+            let codes = mapEntry.codes.join(',');
+            return `${codes}|${mapEntry.displayName}`
+        });
+
+        await outputMappingFile(mappingsForUrls, './disease-url-mappings.txt', (mapEntry) => {
+            let codes = mapEntry.codes.join(',');
+            return `${codes}|${mapEntry.friendlyUrl}`
+        });
+
     } else {
         logger.error("Invalid Mappings Found")
     }
@@ -218,7 +224,7 @@ async function main() {
 
 async function entry() {
     try {
-        await main();
+        await diseaseMappings();
     } catch (err) {
         console.error(err);
     }

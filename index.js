@@ -26,17 +26,7 @@ const logger = winston.createLogger({
 
 const validUrlRegex = /^[a-z0-9\-]+$/;
 
-let server = 'evsrestapi.nci.nih.gov';
-
-// Root disease, disorder or finding
-let rootConceptID = 'C7057';
-
-// Disease or Disorder (no findings/side effects/biomarkers)
-//let rootConceptID = 'C2991';
-
-//Breast Cancer
-//let rootConceptID = 'C4872';
- 
+let server = 'evsrestapi.nci.nih.gov'; 
 
 let client = new EvsApiClient(logger, server, 'https');
  
@@ -180,30 +170,40 @@ function outputMappingFile(allMappings, filePath, formatter) {
     });
 }
 
+
 async function diseaseMappings() {
 
-    logger.info("Beginning Run")
+    //TODO: Make these config settings
 
-    logger.info("Fetching Terms")
+    // Root disease, disorder or finding
+    let rootConceptID = 'C7057';
+
+    // Disease or Disorder (no findings/side effects/biomarkers)
+    //let rootConceptID = 'C2991';
+
+    //Breast Cancer
+    //let rootConceptID = 'C4872';
+
+    logger.info("Fetching Disease Terms")
     //Fetch all EVS diseases
     let allDiseases = await fetchTermAndChildren(rootConceptID);
-    logger.info(`Fetched ${allDiseases.length} terms`);    
+    logger.info(`Fetched ${allDiseases.length} disease terms`);    
 
     //Remove these bad terms
     let badDiseases = [ 'C138195', 'C131913' ];
     _.remove(allDiseases, (disease) => { return badDiseases.includes(disease.code); });
 
-    logger.info("Rolling Up Mappings")
+    logger.info("Rolling Up disease Mappings")
     //Roll up the codes to a single mapping
     let allMappings = rollupConceptsToMappings(allDiseases); 
-    logger.info(`Rolled up ${Object.keys(allMappings).length} mappings`);
+    logger.info(`Rolled up ${Object.keys(allMappings).length} disease mappings`);
      
     let mappingsForUrls = _.pickBy(allMappings, (mapping) => {
         return mapping.isMenuItem;
     });
 
     if (validateMappings(mappingsForUrls)) {
-        logger.info(`All mappings are valid - outputting. Names: ${Object.keys(allMappings).length} URLS: ${Object.keys(mappingsForUrls).length}`)
+        logger.info(`All disease mappings are valid - outputting. Names: ${Object.keys(allMappings).length} URLS: ${Object.keys(mappingsForUrls).length}`)
 
         await outputMappingFile(allMappings, './disease-name-mappings.txt', (mapEntry) => {
             let codes = mapEntry.codes.join(',');
@@ -216,18 +216,52 @@ async function diseaseMappings() {
         });
 
     } else {
-        logger.error("Invalid Mappings Found")
+        logger.error("Invalid disease Mappings Found")
     }
 
-    logger.info("Completed Run")
+}
+
+async function interventionMappings() {    
+
+    //TODO: Make these config settings
+    
+    // Root drugs
+    let rootConceptID = 'C1908';
+
+    logger.info("Fetching Intervention Terms")
+    //Fetch all EVS diseases
+    let allInterventions = await fetchTermAndChildren(rootConceptID);
+    logger.info(`Fetched ${allInterventions.length} intervention terms`);
+
+    //Remove these bad terms
+    let badInterventions = [  ];
+    _.remove(allInterventions, (intervention) => { return badInterventions.includes(intervention.code); });
+
+    logger.info("Rolling Up intervention Mappings")
+    //Roll up the codes to a single mapping
+    let allMappings = rollupConceptsToMappings(allInterventions); 
+    logger.info(`Rolled up ${Object.keys(allMappings).length} intervention mappings`);
+     
+    //NO INTERVENTION URLS
+
+    logger.info(`All intervention mappings are valid - outputting. Names: ${Object.keys(allMappings).length}`)
+
+    await outputMappingFile(allMappings, './intervention-name-mappings.txt', (mapEntry) => {
+        let codes = mapEntry.codes.join(',');
+        return `${codes}|${mapEntry.displayName}`
+    });
 }
 
 async function entry() {
+    logger.info("Beginning Run")
+
     try {
         await diseaseMappings();
+        await interventionMappings();
     } catch (err) {
         console.error(err);
     }
+    logger.info("Completed Run")
 }
 
 entry();

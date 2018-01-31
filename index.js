@@ -29,7 +29,8 @@ const validUrlRegex = /^[a-z0-9\-]+$/;
 let server = 'evsrestapi.nci.nih.gov'; 
 
 let client = new EvsApiClient(logger, server, 'https');
- 
+
+const MAX_URL_LEN = 75;
  
 async function fetchTermAndChildren(termID) {
  
@@ -63,7 +64,7 @@ function getFriendlyUrlForDisplayName(displayName) {
         url = diacritics.remove(url)
             .toLowerCase()
             .replace(/[",+()./'[:*\]]+/g, "")
-            .replace(/(\s+|[;])/g, "-")
+            .replace(/(\s+|[;_&])/g, "-")
             .replace(/[%]+/g,'pct');
     //Replace non-latin characters (e.g. greek) with latin equivelents. n
  
@@ -198,8 +199,22 @@ async function diseaseMappings() {
     let allMappings = rollupConceptsToMappings(allDiseases); 
     logger.info(`Rolled up ${Object.keys(allMappings).length} disease mappings`);
      
+    let tooLongURLs = [];
+
     let mappingsForUrls = _.pickBy(allMappings, (mapping) => {
-        return mapping.isMenuItem;
+        if (!mapping.isMenuItem) {
+            return false;
+        }
+
+        if (mapping.friendlyUrl.length > MAX_URL_LEN) {
+            tooLongURLs.push({
+                friendlyUrl: mapping.friendlyUrl,
+                codes: mapping.codes
+            });
+            return false;
+        }
+
+        return true;
     });
 
     if (validateMappings(mappingsForUrls)) {
@@ -211,6 +226,11 @@ async function diseaseMappings() {
         });
 
         await outputMappingFile(mappingsForUrls, './disease-url-mappings.txt', (mapEntry) => {
+            let codes = mapEntry.codes.join(',');
+            return `${codes}|${mapEntry.friendlyUrl}`
+        });
+
+        await outputMappingFile(tooLongURLs, './disease-url-toolong.txt', (mapEntry) => {
             let codes = mapEntry.codes.join(',');
             return `${codes}|${mapEntry.friendlyUrl}`
         });
@@ -241,15 +261,44 @@ async function interventionMappings() {
     //Roll up the codes to a single mapping
     let allMappings = rollupConceptsToMappings(allInterventions); 
     logger.info(`Rolled up ${Object.keys(allMappings).length} intervention mappings`);
-     
-    //NO INTERVENTION URLS
 
-    logger.info(`All intervention mappings are valid - outputting. Names: ${Object.keys(allMappings).length}`)
+    let tooLongURLs = [];
 
-    await outputMappingFile(allMappings, './intervention-name-mappings.txt', (mapEntry) => {
-        let codes = mapEntry.codes.join(',');
-        return `${codes}|${mapEntry.displayName}`
+    let mappingsForUrls = _.pickBy(allMappings, (mapping) => {
+
+        if (mapping.friendlyUrl.length > MAX_URL_LEN) {
+            tooLongURLs.push({
+                friendlyUrl: mapping.friendlyUrl,
+                codes: mapping.codes
+            });
+            return false;
+        }
+
+        return true;
     });
+
+    if (validateMappings(mappingsForUrls)) {
+
+        logger.info(`All intervention mappings are valid - outputting. Names: ${Object.keys(allMappings).length}  URLS: ${Object.keys(mappingsForUrls).length}`)
+
+        await outputMappingFile(allMappings, './intervention-name-mappings.txt', (mapEntry) => {
+            let codes = mapEntry.codes.join(',');
+            return `${codes}|${mapEntry.displayName}`
+        });
+
+        await outputMappingFile(mappingsForUrls, './intervention-url-mappings.txt', (mapEntry) => {
+            let codes = mapEntry.codes.join(',');
+            return `${codes}|${mapEntry.friendlyUrl}`
+        });
+
+        await outputMappingFile(tooLongURLs, './intervention-url-toolong.txt', (mapEntry) => {
+            let codes = mapEntry.codes.join(',');
+            return `${codes}|${mapEntry.friendlyUrl}`
+        });
+        
+    } else {
+        logger.error("Invalid intervention Mappings Found")
+    }
 }
 
 async function entry() {

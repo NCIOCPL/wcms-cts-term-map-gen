@@ -33,7 +33,7 @@ const MAX_URL_LEN = 75;
 const IGNORE_CODES = [
     '44404', '377721', '423251', '635470', '653110', '757144',
     '44971', '44404', '46221', '423251', '377721', '643063',
-    '653110', '757144', '721308'
+    '653110', '757144', '721308', '39298', '476335', '531923'
 ]
 
 
@@ -47,7 +47,7 @@ function getFriendlyUrlForDisplayName(displayName) {
                 .replace('Ã³', 'ó') 
         url = diacritics.remove(url)
             .toLowerCase()
-            .replace(/[",+().'’[：:*\\\]]+/g, "")
+            .replace(/[",+().ª'’[：:*\\\]]+/g, "")
             .replace(/(\s+|[;_&–/])/g, "-")
             .replace(/[μ]+/g, "u") //Dunno why diacritics did not handle this
             .replace(/[β]+/g, "b") //Dunno why diacritics did not handle this
@@ -203,10 +203,14 @@ async function processTerms(fileName) {
         }
     );
 
+    let badCode = 0;
+    let noCode = 0;
+    let nameMismatch = 0;
+
     //Now let's ask EVS what the urls/names should be
     await Promise.all(
         glossary.map(async (term) => {            
-            if (term.nctid != null) {
+            if (term.nctid != 'NULL') {
                 try {
                     let cncpt = await client.getConcept(term.nctid.toUpperCase());
 
@@ -225,20 +229,58 @@ async function processTerms(fileName) {
                     }
 
                     term.evsUrl = getFriendlyUrlForDisplayName(displayName);
+
+                    if (term.evsUrl != term.friendlyUrl) {
+                        //logger.warn(`Validation Warning: Term ${term.code} name mismatch ${term.friendlyUrl} - ${term.evsUrl}`);
+                        nameMismatch++;
+                    }
+
                 } catch (err) {
                     if (err instanceof EvsNotFoundException) {
-                        term.nctid = term.nctid + ' - NOT FOUND'
+                        term.nctid = term.nctid + ' - NOT FOUND';
+                        badCode++;
+                        //logger.warn(`Validation Warning: Term ${term.code} with code ${term.nctid} not found in EVS`);
                     } else {
                         throw err;
                     }
                 }
+            } else {
+                //logger.warn(`Validation Warning: Term ${term.code} does not have NCIT ID`);
+                noCode++;
             }
         })
     );
 
+    if (badCode > 0 || noCode > 0 ) {
+        logger.warn(`Validation Warning: ${badCode} drugs have a bad EVS ID, ${noCode} and ${nameMismatch} names do not match have none out of ${glossary.length} drugs`)
+    }
 
-    if (validateMappings(glossary)) {
-        //output
+    let tooLongURLs = [];
+
+    let mappingsForUrls = _.filter(glossary, (mapping) => {
+        if (IGNORE_CODES.includes(mapping.code)) {
+            return false;
+        }
+
+        if (mapping.friendlyUrl.length > MAX_URL_LEN) {
+            tooLongURLs.push({
+                friendlyUrl: mapping.friendlyUrl,
+                code: mapping.code
+            });
+            return false;
+        }
+
+        return true;
+    });
+
+    if (validateMappings(mappingsForUrls)) {
+        await outputMappingFile(mappingsForUrls, `./${fileName}-url-mappings.txt`, (mapEntry) => {
+            return `${mapEntry.code}|${mapEntry.friendlyUrl}`
+        });
+
+        await outputMappingFile(tooLongURLs, `./${fileName}-url-toolong.txt`, (mapEntry) => {
+            return `${mapEntry.code}|${mapEntry.friendlyUrl}`
+        });
     }
 }
 

@@ -220,20 +220,22 @@ async function diseaseMappings() {
     if (validateMappings(mappingsForUrls)) {
         logger.info(`All disease mappings are valid - outputting. Names: ${Object.keys(allMappings).length} URLS: ${Object.keys(mappingsForUrls).length}`)
 
-        await outputMappingFile(allMappings, './disease-name-mappings.txt', (mapEntry) => {
-            let codes = mapEntry.codes.join(',');
-            return `${codes}|${mapEntry.displayName}`
-        });
+        const tasks = [
+            outputMappingFile(allMappings, './disease-name-mappings.txt', (mapEntry) => {
+                let codes = mapEntry.codes.join(',');
+                return `${codes}|${mapEntry.displayName}`
+            }),
+            outputMappingFile(mappingsForUrls, './disease-url-mappings.txt', (mapEntry) => {
+                let codes = mapEntry.codes.join(',');
+                return `${codes}|${mapEntry.friendlyUrl}`
+            }),
+            outputMappingFile(tooLongURLs, './disease-url-toolong.txt', (mapEntry) => {
+                let codes = mapEntry.codes.join(',');
+                return `${codes}|${mapEntry.friendlyUrl}`
+            })
+        ];
 
-        await outputMappingFile(mappingsForUrls, './disease-url-mappings.txt', (mapEntry) => {
-            let codes = mapEntry.codes.join(',');
-            return `${codes}|${mapEntry.friendlyUrl}`
-        });
-
-        await outputMappingFile(tooLongURLs, './disease-url-toolong.txt', (mapEntry) => {
-            let codes = mapEntry.codes.join(',');
-            return `${codes}|${mapEntry.friendlyUrl}`
-        });
+        await Promise.all(tasks);
 
     } else {
         logger.error("Invalid disease Mappings Found")
@@ -281,21 +283,23 @@ async function interventionMappings() {
 
         logger.info(`All intervention mappings are valid - outputting. Names: ${Object.keys(allMappings).length}  URLS: ${Object.keys(mappingsForUrls).length}`)
 
-        await outputMappingFile(allMappings, './intervention-name-mappings.txt', (mapEntry) => {
-            let codes = mapEntry.codes.join(',');
-            return `${codes}|${mapEntry.displayName}`
-        });
-
-        await outputMappingFile(mappingsForUrls, './intervention-url-mappings.txt', (mapEntry) => {
-            let codes = mapEntry.codes.join(',');
-            return `${codes}|${mapEntry.friendlyUrl}`
-        });
-
-        await outputMappingFile(tooLongURLs, './intervention-url-toolong.txt', (mapEntry) => {
-            let codes = mapEntry.codes.join(',');
-            return `${codes}|${mapEntry.friendlyUrl}`
-        });
+        const tasks = [
+            outputMappingFile(allMappings, './intervention-name-mappings.txt', (mapEntry) => {
+                let codes = mapEntry.codes.join(',');
+                return `${codes}|${mapEntry.displayName}`
+            }),
+            outputMappingFile(mappingsForUrls, './intervention-url-mappings.txt', (mapEntry) => {
+                let codes = mapEntry.codes.join(',');
+                return `${codes}|${mapEntry.friendlyUrl}`
+            }),
+            outputMappingFile(tooLongURLs, './intervention-url-toolong.txt', (mapEntry) => {
+                let codes = mapEntry.codes.join(',');
+                return `${codes}|${mapEntry.friendlyUrl}`
+            })
+        ];
         
+        await Promise.all(tasks);
+
     } else {
         logger.error("Invalid intervention Mappings Found")
     }
@@ -305,6 +309,8 @@ async function entry() {
     logger.info("Beginning Run")
 
     try {
+        // For now we want these to be sequential to reduce load on the EVS servers,
+        // as well as limit memory usage.
         await diseaseMappings();
         await interventionMappings();
     } catch (err) {

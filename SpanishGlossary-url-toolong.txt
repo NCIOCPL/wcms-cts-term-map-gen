@@ -1,0 +1,14 @@
+45900|cancer-epitelial-de-ovario-de-trompa-de-falopio-y-primario-de-peritoneo-en-estadio-ii
+45901|cancer-epitelial-de-ovario-de-trompas-de-falopio-y-primario-de-peritoneo-en-estadio-iii
+45902|cancer-epitelial-de-ovario-de-trompa-de-falopio-y-primario-de-peritoneo-en-estadio-iv
+413729|glicosilado-de-polietileno-del-factor-de-crecimiento-y-desarrollo-del-megacariocito-humano-recombinante
+413920|carcinoma-de-celulas-de-transicion-de-pelvis-renal-y-ureter-in-situ-estadio-0
+413922|cancer-de-celulas-de-transicion-de-la-pelvis-renal-y-el-ureter-en-estadio-ii
+413923|cancer-de-celulas-de-transicion-de-la-pelvis-renal-y-el-ureter-en-estadio-iii
+413924|cancer-de-celulas-de-transicion-de-la-pelvis-renal-y-el-ureter-en-estadio-iv
+430882|inhibidor-del-receptor-de-tirosina-cinasa-del-factor-de-crecimiento-endotelial-vascular
+512779|oligonucleotido-no-codificante-del-factor-de-crecimiento-endotelial-vascular
+482350|sindrome-de-tumor-de-wilms-aniridia-malformaciones-genitourinarias-retraso-mental
+648585|anticuerpo-monoclonal-imc-3g3-anti-receptor-alfa-del-factor-de-crecimiento-derivado-de-plaquetas
+491538|inhibidor-de-la-tirosina-cinasa-del-receptor-del-factor-de-crecimiento-epidermico
+742486|exploracion-por-tomografia-con-emision-de-positrones-tomografia-computarizada

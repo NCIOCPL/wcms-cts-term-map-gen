@@ -1,0 +1,149 @@
+C4872|Breast Cancer
+C118809|Childhood Breast Cancer
+C94774|Early-Stage Breast Cancer
+C94772|Multicentric Breast Cancer
+C94770|Multifocal Breast Cancer
+C137674|Occult Breast Carcinoma
+C7566|Sporadic Breast Cancer
+C46073|Unilateral Breast Cancer
+C8287|Bilateral Breast Cancer
+C99390|Contralateral Breast Carcinoma
+C40370|Synchronous Bilateral Breast Carcinoma
+C53553|Breast Carcinoma by Gene Expression Profile
+C53558|Basal-Like Breast Carcinoma
+C53554|Luminal A Breast Cancer
+C53556|HER2 Positive Breast Carcinoma
+C53557|Normal Breast-Like Subtype of Breast Carcinoma
+C53555|Luminal B Breast Carcinoma
+C71732|Triple-Negative Breast Cancer
+C2918|Female Breast Cancer
+C36107|Hereditary Female Breast Carcinoma
+C28432|Nipple Cancer
+C27234|Nipple Duct Carcinoma
+C3301|Paget Disease of the Nipple
+C28292|Squamous Cell Carcinoma In Situ of the Nipple
+C7771|Recurrent Breast Cancer
+C8607|Recurrent Inflammatory Breast Carcinoma
+C90513|Breast Cancer by AJCC v6 Stage
+C7767,C88375,C139556,C139535|Stage I Breast Cancer
+C7769,C88376,C139582,C139541|Stage III Breast Cancer
+C27828,C88377,C139585,C139544|Stage IIIC Breast Cancer
+C7768,C139569,C139538|Stage II Breast Cancer
+C5454,C139571,C139539|Stage IIA Breast Cancer
+C5455,C139572,C139540|Stage IIB Breast Cancer
+C3641,C139555,C139534|Stage 0 Breast Cancer
+C4195|Ductal Breast Carcinoma In Situ and Lobular Carcinoma In Situ
+C2924|Ductal Carcinoma In Situ (DCIS)
+C66933|Ductal Breast Carcinoma In Situ, Solid Type
+C7949|High Grade Ductal Breast Carcinoma In Situ
+C9456|Intermediate Grade Ductal Breast Carcinoma In Situ
+C5138|Intraductal Cribriform Breast Adenocarcinoma
+C5137|Intraductal Non-Comedo Breast Adenocarcinoma
+C9457|Low Grade Ductal Breast Carcinoma In Situ
+C4018|Lobular Carcinoma In Situ (LCIS)
+C137839|Pleomorphic Lobular Breast Carcinoma In Situ
+C3995,C139587,C139545|Stage IV Breast Cancer
+C36303|Breast Carcinoma Metastatic in the Bone
+C36302|Breast Carcinoma Metastatic in the Liver
+C36300|Breast Carcinoma Metastatic in the Lung
+C28311|Breast Carcinoma Metastatic in the Skin
+C7696|Stage IV Inflammatory Breast Cancer
+C133501|Breast Carcinoma Metastatic in the Central Nervous System
+C36301|Breast Carcinoma Metastatic in the Brain
+C4503|Hereditary Breast Cancer
+C36106|Hereditary Male Breast Carcinoma
+C3862|Male Breast Cancer
+C91230|Breast Cancer by AJCC v7 Stage
+C85835,C139557,C139536|Stage IA Breast Cancer
+C85836,C139558,C139537|Stage IB Breast Cancer
+C7770,C139583,C139542|Stage IIIA Breast Cancer
+C7782,C139584,C139543|Stage IIIB Breast Cancer
+C9246|Stage IIIB Inflammatory Breast Cancer
+C5214|Breast Adenocarcinoma
+C40360|Breast Adenocarcinoma with Spindle Cell Metaplasia
+C40349|Breast Carcinoma with Osteoclastic Giant Cells
+C40355|Breast Columnar Cell Mucinous Carcinoma
+C40354|Breast Mucinous Cystadenocarcinoma
+C5142|Invasive Cribriform Breast Carcinoma
+C40366|Oncocytic Breast Carcinoma
+C40369|Sebaceous Breast Carcinoma
+C5163|Breast Adenocarcinoma with Squamous Metaplasia
+C6987|Ductal Breast Carcinoma with Squamous Metaplasia
+C5175|Signet Ring Cell Breast Carcinoma
+C54691|Invasive Lobular Breast Carcinoma, Signet Ring Variant
+C5176|Metastatic Signet Ring Cell Breast Carcinoma
+C4001|Inflammatory Breast Cancer
+C47857|Paget Disease of the Breast
+C47858|Paget Disease of the Breast without Invasive Carcinoma
+C4019|Paget Disease and Intraductal Carcinoma of the Breast
+C7951|Paget Disease of the Breast with Invasive Ductal Carcinoma
+C3771|Lobular Breast Carcinoma
+C76328|Metastatic Lobular Breast Carcinoma
+C7950|Invasive Lobular Breast Carcinoma
+C9136|Invasive Lobular Breast Carcinoma with Predominant In Situ Component
+C97049|Invasive Lobular Breast Carcinoma, Alveolar Variant
+C97051|Invasive Lobular Breast Carcinoma, Pleomorphic Variant
+C97052|Invasive Lobular Breast Carcinoma, Solid Variant
+C97053|Invasive Lobular Breast Carcinoma, Tubulolobular Variant
+C5160|Mixed Lobular and Ductal Breast Carcinoma
+C7688|Invasive Ductal and Lobular Carcinoma
+C6393|Invasive Ductal and Invasive Lobular Breast Carcinoma
+C7689|Invasive Ductal and Lobular Carcinoma In Situ
+C7690|Intraductal and Lobular Carcinoma
+C6939|Ductal Breast Carcinoma In Situ and Invasive Lobular Carcinoma
+C4017|Ductal Breast Carcinoma
+C76326|Metastatic Ductal Breast Carcinoma
+C5141|Apocrine Breast Carcinoma
+C5457|Invasive Apocrine Breast Carcinoma
+C5140|Apocrine Breast Carcinoma In Situ
+C40367|Acinic Cell Breast Carcinoma
+C66719|Atypical Medullary Breast Carcinoma
+C40368|Glycogen-Rich, Clear Cell Breast Carcinoma
+C40365|Lipid-Rich Breast Carcinoma
+C9119|Medullary Breast Cancer
+C9131|Mucinous Breast Cancer
+C4189|Secretory Breast Carcinoma
+C9135|Tubular Breast Cancer
+C4194|Invasive Ductal Carcinoma, Not Otherwise Specified
+C40350|Breast Carcinoma with Choriocarcinomatous Features
+C40351|Breast Carcinoma with Melanotic Features
+C9132|Invasive Ductal Breast Carcinoma with Predominant Intraductal Component
+C5161|Pleomorphic Breast Carcinoma
+C7362|Scirrhous Breast Carcinoma
+C9134|Papillary Breast Cancer
+C6870|Solid Papillary Breast Carcinoma
+C4190|Intraductal Papillary Breast Carcinoma
+C7645|Intracystic Papillary Breast Carcinoma
+C5139|Intraductal Micropapillary Breast Carcinoma
+C36085|Invasive Papillary Breast Carcinoma
+C7439|Intraductal Papillary Adenocarcinoma with Invasion
+C36084|Invasive Micropapillary Breast Carcinoma
+C139532|Breast Cancer by AJCC v8 Stage
+C139554|Breast Cancer by AJCC v8 Prognostic Stage
+C139533|Breast Cancer by AJCC v8 Anatomic Stage
+C9245|Invasive Breast Cancer
+C5130|Adenoid Cystic Breast Carcinoma
+C40356|Breast Large Cell Neuroendocrine Carcinoma
+C6760|Breast Small Cell Carcinoma
+C97965|Breast Solid Neuroendocrine Carcinoma
+C40395|Malignant Breast Myoepithelioma
+C40374|Microinvasive Breast Carcinoma
+C40361|Adenosquamous Breast Carcinoma
+C40362|Low Grade Adenosquamous Breast Carcinoma
+C5166|Mucoepidermoid Breast Carcinoma
+C5167|High Grade Mucoepidermoid Breast Carcinoma
+C5168|Low Grade Mucoepidermoid Breast Carcinoma
+C5177|Squamous Cell Breast Carcinoma
+C5178|Metastatic Squamous Cell Breast Carcinoma
+C40359|Squamous Cell Breast Carcinoma, Acantholytic Variant
+C40357|Squamous Cell Breast Carcinoma, Large Cell Keratinizing Variant
+C40358|Squamous Cell Breast Carcinoma, Spindle Cell Variant
+C5164|Metaplastic Breast Carcinoma
+C40364|Mixed Epithelial/Mesenchymal Metaplastic Breast Carcinoma
+C47847|Breast Carcinoma with Chondroid Metaplasia
+C47848|Breast Carcinoma with Osseous Metaplasia
+C40347|Invasive Mixed Breast Carcinoma
+C27829|Invasive Breast Carcinoma by Histologic Grade
+C27830|Grade 1 Invasive Breast Carcinoma
+C27831|Grade 2 Invasive Breast Carcinoma
+C27832|Grade 3 Invasive Breast Carcinoma
